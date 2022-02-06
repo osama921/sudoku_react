@@ -25,6 +25,18 @@ function Sudoku(){
   const [puzzleStatus, setPuzzleStatus] = useState("unsolved");
   const [difficultyStatus, setDifficultyStatus] = useState(difficulties[Math.floor(Math.random() * difficulties.length)]);
   const initialGrid = useRef(getGrid());
+  const initliazeGrid = useState(initializeBoard);
+
+  function initializeBoard()
+  {
+    let time = setTimeout(
+      ()=>
+      {
+        handleInterface("create-random");
+        clearTimeout(time);
+      }
+    ,0)
+  }
 
   function handleChange(row, col, e) {
     const re = /^[0-9\b]+$/;
@@ -68,7 +80,7 @@ function Sudoku(){
         let difficulties = ["easy","medium","hard"];
         let selection = difficulties[Math.floor(Math.random() * difficulties.length)];
         setDifficultyStatus(selection);
-        console.log(selection);
+        
         newGrid = await handleCreate(difficultyStatus);
         copy2DArray(newGrid, initialGrid.current);
         setPuzzleStatus("unsolved");
@@ -119,7 +131,7 @@ function Sudoku(){
         generatedpuzzle = generatedpuzzle + puzzle[property];
       }
 
-      console.log(generatedpuzzle);
+      
       return formatPuzzle(generatedpuzzle);
     } catch (error) {
       console.log(error);
@@ -162,7 +174,6 @@ function Sudoku(){
     copy2DArray(grid, toBeSolvedGrid);
     if(isValidSolution(grid)==="unsolved")
     {
-      console.log()
       if(solve(toBeSolvedGrid))
       {
         setPuzzleStatus("unsolved");
