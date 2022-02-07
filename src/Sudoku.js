@@ -20,12 +20,11 @@ function copy2DArray(from, to) {
 }
 
 function Sudoku(){
-  let difficulties = ["easy","medium","hard"];
   const [grid, setGrid] = useState(getGrid);
   const [puzzleStatus, setPuzzleStatus] = useState("unsolved");
-  const [difficultyStatus, setDifficultyStatus] = useState(difficulties[Math.floor(Math.random() * difficulties.length)]);
+  const [difficultyStatus, setDifficultyStatus] = useState("");
   const initialGrid = useRef(getGrid());
-  const initliazeGrid = useState(initializeBoard);
+  const [initliazeGrid,setInitializeGrid] = useState(initializeBoard);
 
   function initializeBoard()
   {
@@ -54,7 +53,7 @@ function Sudoku(){
     switch (action) {
       case "create-easy":
         setDifficultyStatus("easy");
-        newGrid = await handleCreate(difficultyStatus);
+        newGrid = await handleCreate("easy");
         copy2DArray(newGrid, initialGrid.current);
         setPuzzleStatus("unsolved");
         setGrid(newGrid);
@@ -62,7 +61,7 @@ function Sudoku(){
       
       case "create-medium":
         setDifficultyStatus("medium");
-        newGrid = await handleCreate(difficultyStatus);
+        newGrid = await handleCreate("medium");
         copy2DArray(newGrid, initialGrid.current);
         setPuzzleStatus("unsolved");
         setGrid(newGrid);
@@ -70,18 +69,17 @@ function Sudoku(){
 
       case "create-hard":
         setDifficultyStatus("hard");
-        newGrid = await handleCreate(difficultyStatus);
+        newGrid = await handleCreate("hard");
         copy2DArray(newGrid, initialGrid.current);
         setPuzzleStatus("unsolved");
         setGrid(newGrid);
         break;
 
       case "create-random":
-        let difficulties = ["easy","medium","hard"];
-        let selection = difficulties[Math.floor(Math.random() * difficulties.length)];
+        console.log("random hit");
+        const selection = generateRandomDifficulty();
         setDifficultyStatus(selection);
-        
-        newGrid = await handleCreate(difficultyStatus);
+        newGrid = await handleCreate(selection);
         copy2DArray(newGrid, initialGrid.current);
         setPuzzleStatus("unsolved");
         setGrid(newGrid);
@@ -103,6 +101,13 @@ function Sudoku(){
       default:
         throw new Error("Invalid action");
     }
+  }
+
+  function generateRandomDifficulty()
+  {
+        const difficulties = ["easy","medium","hard"];
+        const choice = difficulties[Math.floor(Math.random() * difficulties.length)];
+        return choice;
   }
 
   async function handleCreate(difficulty) {
