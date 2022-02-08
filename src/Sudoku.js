@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Board from "./ui/Board";
 import Interface from "./ui/Interface";
 import { REST } from "./services/api.js";
@@ -24,17 +24,15 @@ function Sudoku(){
   const [puzzleStatus, setPuzzleStatus] = useState("unsolved");
   const [difficultyStatus, setDifficultyStatus] = useState("");
   const initialGrid = useRef(getGrid());
-  const [initliazeGrid,setInitializeGrid] = useState(initializeBoard);
+  const [initliazeGrid,setInitializeGrid] = useState(0);
+
+  useEffect(()=>{
+    setInitializeGrid(initializeBoard);
+  },[])
 
   function initializeBoard()
   {
-    let time = setTimeout(
-      ()=>
-      {
-        handleInterface("create-random");
-        clearTimeout(time);
-      }
-    ,0)
+    handleInterface("create-random");
   }
 
   function handleChange(row, col, e) {
@@ -76,7 +74,6 @@ function Sudoku(){
         break;
 
       case "create-random":
-        console.log("random hit");
         const selection = generateRandomDifficulty();
         setDifficultyStatus(selection);
         newGrid = await handleCreate(selection);
